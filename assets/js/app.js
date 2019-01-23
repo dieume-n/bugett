@@ -63,9 +63,6 @@ var budgetController = (function () {
 
 
 
-
-
-
 // UI Module
 var UIController = (function () {
     // Stores all HTML Class
@@ -117,6 +114,16 @@ var UIController = (function () {
             // 3. Insert the HTML into the DOM
             document.querySelector(element).insertAdjacentHTML('beforeend', html);
         },
+        clearFields: function () {
+            var fields, fieldsArray;
+            fields = document.querySelectorAll(DOMstrings.inputDescription + ', ' + DOMstrings.inputValue);
+
+            fieldsArray = Array.prototype.slice.call(fields);
+            fieldsArray.forEach(function (current, index, array) {
+                current.value = "";
+            });
+            fieldsArray[0].focus();
+        },
         getDOMstrings: function () {
             return DOMstrings;
         }
@@ -156,7 +163,8 @@ var AppController = (function (bugdetCtrl, UICtrl) {
 
         // 3. Add the item to the UI
         UICtrl.addListItem(newItem, input.type);
-        // 4. Calculate the budget
+        // 4. Clear the fields
+        UICtrl.clearFields();
         // 5. Display the budget on the UI
     };
 
