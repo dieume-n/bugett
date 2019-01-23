@@ -55,6 +55,14 @@ var AppController = (function (bugdetCtrl, UICtrl) {
         // 5. Display the budget on the UI
     };
 
-
+    return {
+        init: function () {
+            console.log('Application has started.');
+            setupEventListeners();
+        }
+    }
 
 })(budgetController, UIController);
+
+// Initalize the App
+AppController.init();
