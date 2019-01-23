@@ -30,13 +30,31 @@ var UIController = (function () {
 // Data Module/ App Module
 var AppController = (function (bugdetCtrl, UICtrl) {
 
-    var DOM = UICtrl.getDOMstrings();
-    document.querySelector(DOM.inputBtn).addEventListener('click', function () {
+    var setupEventListeners = function () {
+
+        var DOM = UICtrl.getDOMstrings();
+        // Submit input when the Ok button is pressed
+        document.querySelector(DOM.inputBtn).addEventListener('click', addItem);
+
+        // Submit input when Enter/ Return Button is pressed
+        document.addEventListener('keypress', function (event) {
+            // Support for older browser
+            if (event.keyCode === 13 || event.which === 13) {
+                addItem();
+            }
+        });
+    };
+
+    var addItem = function () {
         // 1. Get field input Data
         var input = UICtrl.getInput();
+        console.log(input);
         // 2. Add the item to the buget controller
         // 3. Add the item to the UI
         // 4. Calculate the budget
         // 5. Display the budget on the UI
-    });
+    };
+
+
+
 })(budgetController, UIController);
