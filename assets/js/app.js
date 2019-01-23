@@ -1,6 +1,27 @@
 // @ts-check
-// Controller Module
-var budgetController = (function () {})();
+// Budget Module
+var budgetController = (function () {
+
+    // Expense Function Constructor
+    var Expense = function (id, description, value) {
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    }
+
+    // Income Function Constructor
+    var Income = function (id, description, value) {
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    }
+
+})();
+
+
+
+
+
 
 // UI Module
 var UIController = (function () {
@@ -27,7 +48,10 @@ var UIController = (function () {
 })();
 
 
-// Data Module/ App Module
+
+
+
+// App Module
 var AppController = (function (bugdetCtrl, UICtrl) {
 
     var setupEventListeners = function () {
@@ -48,7 +72,6 @@ var AppController = (function (bugdetCtrl, UICtrl) {
     var addItem = function () {
         // 1. Get field input Data
         var input = UICtrl.getInput();
-        console.log(input);
         // 2. Add the item to the buget controller
         // 3. Add the item to the UI
         // 4. Calculate the budget
