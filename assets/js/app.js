@@ -16,6 +16,20 @@ var budgetController = (function () {
         this.value = value;
     }
 
+    // Keeping track of our data (Incomes and expenses, Budget and percentages)
+    var data = {
+        items: {
+            expenses: [],
+            incomes: [],
+        },
+        totals: {
+            expenses: 0,
+            incomes: 0
+        }
+
+
+    };
+
 })();
 
 
