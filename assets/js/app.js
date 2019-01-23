@@ -73,7 +73,9 @@ var UIController = (function () {
         inputType: '.add__type',
         inputDescription: '.add__description',
         inputValue: '.add__value',
-        inputBtn: '.add__btn'
+        inputBtn: '.add__btn',
+        incomeContainer: '.income__list',
+        expenseContainer: '.expense__list',
     };
     return {
         // Get user Input
@@ -83,6 +85,37 @@ var UIController = (function () {
                 description: document.querySelector(DOMstrings.inputDescription).value,
                 value: document.querySelector(DOMstrings.inputValue).value
             }
+        },
+        addListItem: function (obj, type) {
+            var html, element;
+            // 1. Create HTML template string ES6
+            if (type === 'income') {
+                element = DOMstrings.incomeContainer;
+                html = `<div class="item clearfix" id="income-${obj.id}">
+                    <div class="item__description">${obj.description}</div>
+                    <div class="right clearfix">
+                        <div class="item__value">+ ${obj.value}</div>
+                        <div class="item__delete">
+                            <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
+                        </div>
+                    </div>
+                </div>`;
+            } else if (type === 'expense') {
+                element = DOMstrings.expenseContainer;
+                html = `<div class="item clearfix" id="expense-${obj.id}">
+                    <div class="item__description">${obj.description}</div>
+                    <div class="right clearfix">
+                        <div class="item__value">- ${obj.value}</div>
+                        <div class="item__percentage">21%</div>
+                        <div class="item__delete">
+                            <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            // 3. Insert the HTML into the DOM
+            document.querySelector(element).insertAdjacentHTML('beforeend', html);
         },
         getDOMstrings: function () {
             return DOMstrings;
@@ -122,6 +155,7 @@ var AppController = (function (bugdetCtrl, UICtrl) {
         newItem = bugdetCtrl.addItem(input.type, input.description, input.value);
 
         // 3. Add the item to the UI
+        UICtrl.addListItem(newItem, input.type);
         // 4. Calculate the budget
         // 5. Display the budget on the UI
     };
