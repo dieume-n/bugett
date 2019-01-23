@@ -26,9 +26,38 @@ var budgetController = (function () {
             expenses: 0,
             incomes: 0
         }
-
-
     };
+
+    return {
+        // Add item for "permanent storage"
+        addItem: function (type, description, value) {
+            var newItem, id;
+
+            // Create new ID (last index + 1) depending on the data type Income or expense
+            if (data.items[type + 's'].length > 0) {
+                id = data.items[type + 's'][data.items[type + 's'].length - 1].id + 1;
+            } else {
+                id = 0;
+            }
+
+
+            // Create new Item
+            if (type === 'expense') {
+                newItem = new Expense(id, description, value);
+            } else if (type === 'income') {
+                newItem = new Income(id, description, value);
+            }
+
+            // Push it into our data structure
+            data.items[type + 's'].push(newItem);
+
+            // Return the newly created element
+            return newItem;
+        },
+        testing: function () {
+            console.log(data);
+        }
+    }
 
 })();
 
@@ -84,9 +113,14 @@ var AppController = (function (bugdetCtrl, UICtrl) {
     };
 
     var addItem = function () {
+        var input, newItem;
+
         // 1. Get field input Data
-        var input = UICtrl.getInput();
+        input = UICtrl.getInput();
+
         // 2. Add the item to the buget controller
+        newItem = bugdetCtrl.addItem(input.type, input.description, input.value);
+
         // 3. Add the item to the UI
         // 4. Calculate the budget
         // 5. Display the budget on the UI
