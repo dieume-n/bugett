@@ -7,14 +7,24 @@ var budgetController = (function () {
         this.id = id;
         this.description = description;
         this.value = value;
-    }
+    };
 
     // Income Function Constructor
     var Income = function (id, description, value) {
         this.id = id;
         this.description = description;
         this.value = value;
-    }
+    };
+
+    // Calculate total (incomes or expenses)
+    var calculateTotal = function (type) {
+        var sum = 0;
+        data.items[type].forEach(function (current) {
+            sum += current.value;
+
+        });
+        data.totals[type] = sum;
+    };
 
     // Keeping track of our data (Incomes and expenses, Budget and percentages)
     var data = {
@@ -25,8 +35,11 @@ var budgetController = (function () {
         totals: {
             expenses: 0,
             incomes: 0
-        }
+        },
+        budget: 0,
+        percentage: -1
     };
+
 
     return {
         // Add item for "permanent storage"
@@ -53,6 +66,31 @@ var budgetController = (function () {
 
             // Return the newly created element
             return newItem;
+        },
+        calculateBudget: function () {
+            // Calculate Total income and expenses
+            calculateTotal('expenses');
+            calculateTotal('incomes');
+
+            // Calculate the budget: incomes - expenses
+            data.budget = data.totals.incomes - data.totals.expenses;
+
+            // Calculate the percentage of income that we spent
+            if (data.totals.incomes > 0) {
+                data.percentage = Math.round((data.totals.expenses / data.totals.incomes) * 100);
+            } else {
+                data.percentage = -1;
+            }
+
+
+        },
+        getBudget: function () {
+            return {
+                budget: data.budget,
+                totalIncomes: data.totals.incomes,
+                totalExpenses: data.totals.expenses,
+                percentage: data.percentage
+            }
         },
         testing: function () {
             console.log(data);
@@ -154,8 +192,13 @@ var AppController = (function (bugdetCtrl, UICtrl) {
 
     var updateBudget = function () {
         // 1. Calculate the budget
+        bugdetCtrl.calculateBudget();
+
         // 2. Return the budget
+        var budget = bugdetCtrl.getBudget();
+
         // 3. Display the budget on the UI
+        console.log(budget);
     };
 
 
