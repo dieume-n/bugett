@@ -67,6 +67,17 @@ var budgetController = (function () {
             // Return the newly created element
             return newItem;
         },
+        deleteItem: function (type, id) {
+            var ids, index;
+            ids = data.items[type + 's'].map(function (current) {
+                return current.id;
+            });
+            index = ids.indexOf(id);
+
+            if (index !== -1) {
+                data.items[type + 's'].splice(index, 1);
+            }
+        },
         calculateBudget: function () {
             // Calculate Total income and expenses
             calculateTotal('expenses');
@@ -114,7 +125,8 @@ var UIController = (function () {
         budgetLabel: '.budget__value',
         incomeLabel: '.budget__income--value',
         expenseLabel: '.budget__expenses--value',
-        percentageLabel: '.budget__expenses--percentage'
+        percentageLabel: '.budget__expenses--percentage',
+        container: '.container'
 
     };
     return {
@@ -195,15 +207,17 @@ var AppController = (function (bugdetCtrl, UICtrl) {
 
         var DOM = UICtrl.getDOMstrings();
         // Submit input when the Ok button is pressed
-        document.querySelector(DOM.inputBtn).addEventListener('click', addItem);
+        document.querySelector(DOM.inputBtn).addEventListener('click', appAddItem);
 
         // Submit input when Enter/ Return Button is pressed
         document.addEventListener('keypress', function (event) {
             // Support for older browser
             if (event.keyCode === 13 || event.which === 13) {
-                addItem();
+                appAddItem();
             }
         });
+
+        document.querySelector(DOM.container).addEventListener('click', appDeleteItem);
     };
 
     var updateBudget = function () {
@@ -217,8 +231,7 @@ var AppController = (function (bugdetCtrl, UICtrl) {
         UICtrl.displayBudget(budget);
     };
 
-
-    var addItem = function () {
+    var appAddItem = function () {
         var input, newItem;
 
         // 1. Get field input Data
@@ -237,6 +250,23 @@ var AppController = (function (bugdetCtrl, UICtrl) {
 
             // 5. Calculate and update budget
             updateBudget();
+        }
+    };
+
+    var appDeleteItem = function (event) {
+        var itemID, splitID, type, id;
+        itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+
+        if (itemID) {
+            splitID = itemID.split('-');
+            type = splitID[0];
+            id = parseInt(splitID[1]);
+
+            // Delete Item from the data structure
+            bugdetCtrl.deleteItem(type, id);
+            // Delete the item from the UI
+            // Update and shoe the new budget
+
         }
     };
 
