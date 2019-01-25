@@ -7,6 +7,19 @@ var budgetController = (function () {
         this.id = id;
         this.description = description;
         this.value = value;
+        this.percentage = -1;
+    };
+
+    Expense.prototype.calcPercentage = function (totalIncome) {
+        if (totalIncome > 0) {
+            this.percentage = Math.round((this.value / totalIncome) * 100);
+        } else {
+            this.percentage = -1;
+        }
+    };
+
+    Expense.prototype.getPercentage = function () {
+        return this.percentage;
     };
 
     // Income Function Constructor
@@ -94,6 +107,17 @@ var budgetController = (function () {
             }
 
 
+        },
+        calculatePercentages: function () {
+            data.items.expenses.forEach(function (current) {
+                current.calcPercentage(data.totals.incomes);
+            });
+        },
+        getPercentages: function () {
+            var percentages = data.items.expenses.map(function (current) {
+                return current.getPercentage();
+            });
+            return percentages;
         },
         getBudget: function () {
             return {
@@ -235,6 +259,17 @@ var AppController = (function (bugdetCtrl, UICtrl) {
         UICtrl.displayBudget(budget);
     };
 
+    var updatePercentages = function () {
+        // Calculate the percentages
+        bugdetCtrl.calculatePercentages();
+
+        // Read percentages form the budget controller
+        var percentages = bugdetCtrl.getPercentages();
+
+        // update the UI with the new percentages
+        console.log(percentages);
+    };
+
     var appAddItem = function () {
         var input, newItem;
 
@@ -254,6 +289,9 @@ var AppController = (function (bugdetCtrl, UICtrl) {
 
             // 5. Calculate and update budget
             updateBudget();
+
+            // 6. Update percentages
+            updatePercentages();
         }
     };
 
@@ -274,6 +312,9 @@ var AppController = (function (bugdetCtrl, UICtrl) {
 
             // Update and shoe the new budget
             updateBudget();
+
+            // Update percentages
+            updatePercentages();
 
         }
     };
