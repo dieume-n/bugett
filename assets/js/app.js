@@ -151,8 +151,21 @@ var UIController = (function () {
         expenseLabel: '.budget__expenses--value',
         percentageLabel: '.budget__expenses--percentage',
         container: '.container',
-        expensesPercentageLabel: '.item__percentage'
+        expensesPercentageLabel: '.item__percentage',
+        dateLabel: '.budget__title--month'
 
+    };
+    var formatNumber = function (num) {
+        var numSplit, int, dec;
+        num = Math.abs(num);
+        num = num.toFixed(2);
+        numSplit = num.split('.');
+        int = numSplit[0];
+        if (int.length > 3) {
+            int = int.substr(0, int.length - 3) + ',' + int.substr(int.length - 3, int.length);
+        }
+        dec = numSplit[1];
+        return int + '.' + dec;
     };
     return {
         // Get user Input
@@ -171,7 +184,7 @@ var UIController = (function () {
                 html = `<div class="item clearfix" id="income-${obj.id}">
                     <div class="item__description">${obj.description}</div>
                     <div class="right clearfix">
-                        <div class="item__value">+ ${obj.value}</div>
+                        <div class="item__value">+ ${formatNumber(obj.value)}</div>
                         <div class="item__delete">
                             <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
                         </div>
@@ -182,7 +195,7 @@ var UIController = (function () {
                 html = `<div class="item clearfix" id="expense-${obj.id}">
                     <div class="item__description">${obj.description}</div>
                     <div class="right clearfix">
-                        <div class="item__value">- ${obj.value}</div>
+                        <div class="item__value">- ${formatNumber(obj.value)}</div>
                         <div class="item__percentage">21%</div>
                         <div class="item__delete">
                             <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
@@ -209,9 +222,9 @@ var UIController = (function () {
             fieldsArray[0].focus();
         },
         displayBudget: function (obj) {
-            document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
-            document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalIncomes;
-            document.querySelector(DOMstrings.expenseLabel).textContent = obj.totalExpenses;
+            document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget);
+            document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.totalIncomes);
+            document.querySelector(DOMstrings.expenseLabel).textContent = formatNumber(obj.totalExpenses);
 
             if (obj.percentage > 0) {
                 document.querySelector(DOMstrings.percentageLabel).textContent = obj.percentage + ' %';
@@ -233,6 +246,17 @@ var UIController = (function () {
                     current.textContent = '---';
                 }
             });
+        },
+        displayMonth: function () {
+            var now, month, months, year;
+            now = new Date();
+            months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+            month = now.getMonth();
+            year = now.getFullYear();
+
+            document.querySelector(DOMstrings.dateLabel).textContent = months[month] + ' ' + year;
+
+
         },
         getDOMstrings: function () {
             return DOMstrings;
@@ -338,6 +362,7 @@ var AppController = (function (bugdetCtrl, UICtrl) {
     return {
         init: function () {
             console.log('Application has started.');
+            UICtrl.displayMonth();
             setupEventListeners();
             UICtrl.displayBudget({
                 budget: 0,
